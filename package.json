@@ -36,5 +36,15 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@emotion/react": "^11.10.0",
+    "@emotion/styled": "^11.10.0",
+    "formik": "^2.2.9",
+    "nanoid": "^4.0.0",
+    "prop-types": "^15.8.1",
+    "react-icons": "^4.4.0",
+    "react-toastify": "^9.0.8",
+    "yup": "^0.32.11"
   }
 }
