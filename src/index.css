@@ -6,6 +6,10 @@
   --toastify-color-progress-error: #fff;
 }
 
+.Toastify__toast-theme--light {
+  color: #ffffff;
+}
+
 .Toastify__close-button > svg {
   fill: #fff;
 }

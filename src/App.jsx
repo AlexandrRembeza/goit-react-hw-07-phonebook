@@ -42,7 +42,7 @@ export function App() {
   };
 
   const handleFilter = e => {
-    const inputValue = e.target.value.toLowerCase();
+    const inputValue = e.target.value.toLowerCase().trim();
     setFilter(inputValue);
   };
 

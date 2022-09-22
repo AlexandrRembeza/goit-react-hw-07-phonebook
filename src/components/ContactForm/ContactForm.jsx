@@ -2,6 +2,7 @@ import { Formik, Form as FormikForm, Field, ErrorMessage } from 'formik';
 import styled from '@emotion/styled';
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 
 import { Label, Text, AddButton, Thumb } from './ContactForm.styled';
 
@@ -69,7 +70,7 @@ const schema = Yup.object().shape({
   name: Yup.string()
     .matches(
       /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/,
-      'Имя может содержать только буквы, апостроф, тире и пробелы. По бокам нет пробелов'
+      'Имя может содержать только буквы, апостроф, тире и пробелы.'
     )
     .required('Это поле обязательное'),
   number: Yup.string()
@@ -77,8 +78,8 @@ const schema = Yup.object().shape({
       /[0-9]{3}-[0-9]{2}-[0-9]{2}/,
       'Номер должен содержать только числа и тире. Формат: (123-45-67)'
     )
-    .min(9, 'Номер должен состоять из 9 символов')
-    .max(9, 'Номер должен состоять из 9 символов')
+    // .min(9, 'Номер должен состоять из 9 символов')
+    // .max(9, 'Номер должен состоять из 9 символов')
     .required('Это поле обязательное'),
 });
 
@@ -88,9 +89,22 @@ export function ContactForm({ addContact }) {
     number: '',
   };
 
+  const [error, setError] = useState(false);
+
   const handleSubmit = (values, { resetForm }) => {
+    if (values.number.trim().length !== 9) {
+      setError(true);
+      return setTimeout(() => {
+        setError(false);
+      }, 3000);
+    }
+
+    const formValues = {
+      name: values.name.trim(),
+      number: values.number.trim(),
+    };
     resetForm();
-    addContact(values);
+    addContact(formValues);
   };
 
   return (
@@ -113,6 +127,11 @@ export function ContactForm({ addContact }) {
           <Thumb>
             <Input type="tel" name="number" placeholder="123-45-67" />
             <FormError name="number" />
+            {error ? (
+              <ErrorElem>Номер должен состоять из девяти символов</ErrorElem>
+            ) : (
+              ''
+            )}
           </Thumb>
         </Label>
 
