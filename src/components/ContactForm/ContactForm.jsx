@@ -89,13 +89,13 @@ export function ContactForm({ addContact }) {
     number: '',
   };
 
-  const [error, setError] = useState(false);
+  const [unvalidNum, setUnvalidNum] = useState(false);
 
   const handleSubmit = (values, { resetForm }) => {
     if (values.number.trim().length !== 9) {
-      setError(true);
+      setUnvalidNum(true);
       return setTimeout(() => {
-        setError(false);
+        setUnvalidNum(false);
       }, 3000);
     }
 
@@ -127,7 +127,7 @@ export function ContactForm({ addContact }) {
           <Thumb>
             <Input type="tel" name="number" placeholder="123-45-67" />
             <FormError name="number" />
-            {error ? (
+            {unvalidNum ? (
               <ErrorElem>Номер должен состоять из девяти символов</ErrorElem>
             ) : (
               ''
