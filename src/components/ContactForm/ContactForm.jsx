@@ -69,7 +69,7 @@ const FormError = ({ name }) => {
 const schema = Yup.object().shape({
   name: Yup.string()
     .matches(
-      /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/,
+      /[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я])?[a-zA-Zа-яА-Я]*)/,
       'Имя может содержать только буквы, апостроф, тире и пробелы.'
     )
     .required('Это поле обязательное'),
