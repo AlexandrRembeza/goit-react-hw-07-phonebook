@@ -1,74 +1,70 @@
-import { useState } from 'react';
-import { nanoid } from 'nanoid';
-import PropTypes, { arrayOf } from 'prop-types';
-
+import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { useLocalStorage } from 'hooks';
+import { changeFilter } from 'redux/filterSlice';
+import { addContact, deleteContact } from 'redux/contactsSlice';
+import { getContacts, getFilter } from 'redux/selectors';
+
+import { toastOptions } from 'utils/toastOptions';
+
 import { Phonebook, Title, Subtitle, Wrapper, ErrorMessage } from 'App.styled';
 import { ContactForm } from 'components/ContactForm';
 import { Filter } from 'components/Filter';
 import { ContactList } from 'components/ContactList';
 
-export function App() {
-  const [contacts, setContacts] = useLocalStorage();
-  const [filter, setFilter] = useState('');
+const getFilteredContacts = (contacts, filter) => {
+  if (filter) {
+    const filterContacts = contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter)
+    );
+    return filterContacts;
+  }
+  return contacts;
+};
 
-  const addContact = values => {
+export function App() {
+  const contacts = useSelector(getContacts);
+  const filter = useSelector(getFilter);
+  const dispatch = useDispatch();
+
+  const addNewContact = values => {
     for (const contact of contacts) {
       if (contact.name.toLowerCase() === values.name.toLowerCase()) {
-        return toast.error(`${contact.name} is already in contacts`, {
-          position: 'top-left',
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        return toast.error(
+          `${contact.name} is already in contacts`,
+          toastOptions
+        );
       }
     }
-    setContacts(state => [
-      { id: nanoid(), name: values.name, number: values.number },
-      ...state,
-    ]);
+    dispatch(addContact(values));
   };
 
-  const deleteContact = e => {
-    const buttonId = e.target.dataset.id;
-    const filterContacts = contacts.filter(contact => buttonId !== contact.id);
-    setContacts([...filterContacts]);
+  const removeContact = e => {
+    dispatch(deleteContact({ id: e.target.dataset.id }));
   };
 
   const handleFilter = e => {
-    const inputValue = e.target.value.toLowerCase().trim();
-    setFilter(inputValue);
+    dispatch(changeFilter({ filter: e.target.value.toLowerCase().trim() }));
   };
 
-  const renderContacts = () => {
-    if (filter) {
-      const filterContacts = contacts.filter(contact =>
-        contact.name.toLowerCase().includes(filter)
-      );
-      return filterContacts;
-    }
-    return contacts;
-  };
-
-  const currentContacts = renderContacts();
+  const filteredContacts = getFilteredContacts(contacts, filter);
 
   return (
     <Wrapper>
       <Phonebook>
         <Title>Phonebook</Title>
-        <ContactForm addContact={addContact} />
+        <ContactForm addContact={addNewContact} />
         <ToastContainer />
         <Subtitle>Contacts</Subtitle>
         <Filter handleFilter={handleFilter} />
       </Phonebook>
-      {currentContacts.length !== 0 ? (
-        <ContactList contacts={currentContacts} deleteContact={deleteContact} />
+      {filteredContacts.length !== 0 ? (
+        <ContactList
+          contacts={filteredContacts}
+          deleteContact={removeContact}
+        />
       ) : (
         <ErrorMessage>No Results</ErrorMessage>
       )}
@@ -85,12 +81,6 @@ Filter.propTypes = {
 };
 
 ContactList.propTypes = {
-  contacts: arrayOf(
-    PropTypes.exact({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ),
+  contacts: PropTypes.array.isRequired,
   deleteContact: PropTypes.func.isRequired,
 };
