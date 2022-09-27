@@ -5,7 +5,7 @@ export const DeleteButton = styled.button`
   justify-content: center;
   align-items: center;
 
-  font-family: 'Comic Sans MS';
+  font-family: 'Comic Sans MS', sans-serif;
 
   padding: 10px 10px;
 

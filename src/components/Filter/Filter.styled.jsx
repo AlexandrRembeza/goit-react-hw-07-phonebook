@@ -2,8 +2,8 @@ import styled from '@emotion/styled';
 import {
   Form as ContactForm,
   Input as Field,
-} from '../ContactForm/ContactForm';
-import { Text as LabelText } from 'components/ContactForm/ContactForm.styled';
+  Text as LabelText,
+} from '../ContactForm/ContactForm.styled';
 
 export const Form = ContactForm.withComponent('form');
 export const Input = Field.withComponent('input');

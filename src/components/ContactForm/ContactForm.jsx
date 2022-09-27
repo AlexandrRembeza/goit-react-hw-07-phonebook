@@ -1,70 +1,18 @@
-import { Formik, Form as FormikForm, Field, ErrorMessage } from 'formik';
-import styled from '@emotion/styled';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 
-import { Label, Text, AddButton, Thumb } from './ContactForm.styled';
-
-export const Form = styled(FormikForm)`
-  display: flex;
-  flex-direction: column;
-
-  width: 450px;
-
-  background-color: rgb(220, 253, 220);
-
-  padding: 15px 10px;
-  margin: 0 auto;
-  border: 3px solid rgb(18, 209, 18);
-  border-radius: 10px;
-`;
-
-export const Input = styled(Field)`
-  width: 250px;
-
-  font-size: 18px;
-  color: rgb(40, 70, 219);
-
-  padding: 10px 15px;
-  border: 1px solid rgb(40, 70, 219);
-  border-radius: 5px;
-  outline: none;
-
-  &:focus {
-    outline: 2px solid rgb(40, 70, 219);
-  }
-`;
-
-const ErrorElem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  position: absolute;
-  top: 0px;
-  left: -220px;
-
-  font-size: 15px;
-
-  width: 200px;
-  padding: 10px;
-
-  border-radius: 10px;
-  color: #ffff;
-  background-color: rgb(252, 44, 44);
-`;
-
-const FormError = ({ name }) => {
-  return (
-    <ErrorMessage
-      name={name}
-      render={msg => {
-        return <ErrorElem>{msg}</ErrorElem>;
-      }}
-    />
-  );
-};
+import {
+  Label,
+  Text,
+  AddButton,
+  Thumb,
+  Form,
+  Input,
+} from './ContactForm.styled';
+import { FormError } from 'components/FormError';
+import { ErrorElem } from 'components/FormError/FormError.styled';
 
 const schema = Yup.object().shape({
   name: Yup.string()
@@ -107,36 +55,46 @@ export function ContactForm({ addContact }) {
     addContact(formValues);
   };
 
+  const resetErrors = setErrors => {
+    setTimeout(() => setErrors({}), 3000);
+  };
+
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={schema}
       onSubmit={handleSubmit}
     >
-      <Form autoComplete="off">
-        <Label>
-          <Text>Name</Text>
-          <Thumb>
-            <Input type="text" name="name" placeholder="Name Surname" />
-            <FormError name="name" />
-          </Thumb>
-        </Label>
+      {({ errors, touched, setErrors }) => (
+        <Form autoComplete="off">
+          <Label>
+            <Text>Name</Text>
+            <Thumb>
+              <Input type="text" name="name" placeholder="Name Surname" />
+              {errors.name && touched.name ? <FormError name="name" /> : null}
+              {errors.name && touched.name && resetErrors(setErrors)}
+            </Thumb>
+          </Label>
 
-        <Label>
-          <Text>Number {`(xxx-xx-xx)`}</Text>
-          <Thumb>
-            <Input type="tel" name="number" placeholder="123-45-67" />
-            <FormError name="number" />
-            {unvalidNum ? (
-              <ErrorElem>Номер должен состоять из девяти символов</ErrorElem>
-            ) : (
-              ''
-            )}
-          </Thumb>
-        </Label>
+          <Label>
+            <Text>Number {`(xxx-xx-xx)`}</Text>
+            <Thumb>
+              <Input type="tel" name="number" placeholder="123-45-67" />
+              {errors.number && touched.number ? (
+                <FormError name="number" />
+              ) : null}
+              {errors.number && touched.number && resetErrors(setErrors)}
+              {unvalidNum ? (
+                <ErrorElem>Номер должен состоять из девяти символов</ErrorElem>
+              ) : (
+                ''
+              )}
+            </Thumb>
+          </Label>
 
-        <AddButton type="submit">Add contact</AddButton>
-      </Form>
+          <AddButton type="submit">Add contact</AddButton>
+        </Form>
+      )}
     </Formik>
   );
 }

@@ -1,4 +1,35 @@
 import styled from '@emotion/styled';
+import { Form as FormikForm, Field } from 'formik';
+
+export const Form = styled(FormikForm)`
+  display: flex;
+  flex-direction: column;
+
+  width: 450px;
+
+  background-color: rgb(220, 253, 220);
+
+  padding: 15px 10px;
+  margin: 0 auto;
+  border: 3px solid rgb(18, 209, 18);
+  border-radius: 10px;
+`;
+
+export const Input = styled(Field)`
+  width: 250px;
+
+  font-size: 18px;
+  color: rgb(40, 70, 219);
+
+  padding: 10px 15px;
+  border: 1px solid rgb(40, 70, 219);
+  border-radius: 5px;
+  outline: none;
+
+  &:focus {
+    outline: 2px solid rgb(40, 70, 219);
+  }
+`;
 
 export const Label = styled.label`
   width: 250px;

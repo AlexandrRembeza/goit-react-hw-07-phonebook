@@ -41,7 +41,6 @@ const persistConfig = {
   key: 'contacts',
   version: 1,
   storage,
-  // whitelist: ['allContacts'],
 };
 
 export const contactsReducer = persistReducer(
