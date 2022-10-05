@@ -112,6 +112,7 @@ export function App() {
 
 ContactForm.propTypes = {
   addContact: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
 };
 
 Filter.propTypes = {
