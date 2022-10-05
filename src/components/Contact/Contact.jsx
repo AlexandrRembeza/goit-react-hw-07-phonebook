@@ -8,8 +8,8 @@ export const Contact = ({ name, number, id, deleteContact }) => {
       {name}: {number}
       <DeleteButton
         data-id={id}
-        onClick={deleteContact}
-        aria-label="Удалить контакт"
+        onClick={() => deleteContact(id, name)}
+        aria-label="delete contact"
       >
         <CgClose size={17} />
       </DeleteButton>

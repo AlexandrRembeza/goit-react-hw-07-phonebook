@@ -1,19 +1,5 @@
 @import 'normalize.css';
 
-:root {
-  --toastify-color-light: rgb(251, 39, 39);
-  --toastify-icon-color-error: #fff;
-  --toastify-color-progress-error: #fff;
-}
-
-.Toastify__toast-theme--light {
-  color: #ffffff;
-}
-
-.Toastify__close-button > svg {
-  fill: #fff;
-}
-
 .Toastify__toast {
   height: 70px;
   border-radius: 8px;

@@ -1,11 +1,12 @@
-import { List, Item } from './ContactList.styled';
-import { Contact } from 'components/Contact';
 import PropTypes from 'prop-types';
+import { Item } from './ContactList.styled';
+import { Contact } from 'components/Contact';
 
 export const ContactList = ({ contacts, deleteContact }) => {
+  const reverseContacts = [...contacts].reverse();
   return (
-    <List>
-      {contacts.map(({ name, id, number }) => (
+    <>
+      {reverseContacts.map(({ name, id, number }) => (
         <Item key={id}>
           <Contact
             id={id}
@@ -15,7 +16,7 @@ export const ContactList = ({ contacts, deleteContact }) => {
           />
         </Item>
       ))}
-    </List>
+    </>
   );
 };
 

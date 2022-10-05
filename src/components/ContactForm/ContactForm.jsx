@@ -31,7 +31,7 @@ const schema = Yup.object().shape({
     .required('Это поле обязательное'),
 });
 
-export function ContactForm({ addContact }) {
+export function ContactForm({ addContact, isLoading }) {
   const initialValues = {
     name: '',
     number: '',
@@ -84,15 +84,15 @@ export function ContactForm({ addContact }) {
                 <FormError name="number" />
               ) : null}
               {errors.number && touched.number && resetErrors(setErrors)}
-              {unvalidNum ? (
+              {unvalidNum && (
                 <ErrorElem>Номер должен состоять из девяти символов</ErrorElem>
-              ) : (
-                ''
               )}
             </Thumb>
           </Label>
 
-          <AddButton type="submit">Add contact</AddButton>
+          <AddButton type="submit" disabled={isLoading}>
+            Add contact
+          </AddButton>
         </Form>
       )}
     </Formik>
