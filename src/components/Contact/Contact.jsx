@@ -7,9 +7,8 @@ export const Contact = ({ name, number, id, deleteContact }) => {
     <>
       {name}: {number}
       <DeleteButton
-        data-id={id}
         onClick={() => deleteContact(id, name)}
-        aria-label="delete contact"
+        aria-label={`delete ${name} from contacts`}
       >
         <CgClose size={17} />
       </DeleteButton>
@@ -18,6 +17,5 @@ export const Contact = ({ name, number, id, deleteContact }) => {
 };
 
 DeleteButton.propTypes = {
-  'data-id': PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
 };
