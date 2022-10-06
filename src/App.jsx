@@ -70,24 +70,25 @@ export function App() {
   };
 
   const filteredContacts = getFilteredContacts(contacts, filter);
+  const isLoadingContacts =
+    isFetching || addContactLoading || deleteContactLoading;
+  const isShowingError =
+    !isFetching && filteredContacts && filteredContacts.length === 0;
 
   return (
     <Wrapper>
       <Phonebook>
         <Title>Phonebook</Title>
-        <ContactForm
-          addContact={addNewContact}
-          isLoading={isFetching || addContactLoading || deleteContactLoading}
-        />
+        <ContactForm addContact={addNewContact} isLoading={isLoadingContacts} />
         <Subtitle>Contacts</Subtitle>
         <Filter handleFilter={handleFilter} />
       </Phonebook>
 
-      {!isFetching && filteredContacts && filteredContacts.length === 0 ? (
+      {isShowingError ? (
         <ErrorMessage>No Contacts</ErrorMessage>
       ) : (
         <List>
-          {isFetching || addContactLoading || deleteContactLoading ? (
+          {isLoadingContacts ? (
             <SpinnerWrap>
               <RotatingLines
                 strokeColor="#596dff"
