@@ -3,14 +3,7 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 
-import {
-  Label,
-  Text,
-  AddButton,
-  Thumb,
-  Form,
-  Input,
-} from './ContactForm.styled';
+import { Label, Text, AddButton, Thumb, Form, Input } from './ContactForm.styled';
 import { FormError } from 'components/FormError';
 import { ErrorElem } from 'components/FormError/FormError.styled';
 
@@ -60,11 +53,7 @@ export function ContactForm({ addContact, isLoading }) {
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={schema}
-      onSubmit={handleSubmit}
-    >
+    <Formik initialValues={initialValues} validationSchema={schema} onSubmit={handleSubmit}>
       {({ errors, touched, setErrors }) => (
         <Form autoComplete="off">
           <Label>
@@ -80,13 +69,9 @@ export function ContactForm({ addContact, isLoading }) {
             <Text>Number {`(xxx-xx-xx)`}</Text>
             <Thumb>
               <Input type="tel" name="number" placeholder="123-45-67" />
-              {errors.number && touched.number ? (
-                <FormError name="number" />
-              ) : null}
+              {errors.number && touched.number ? <FormError name="number" /> : null}
               {errors.number && touched.number && resetErrors(setErrors)}
-              {unvalidNum && (
-                <ErrorElem>Номер должен состоять из девяти символов</ErrorElem>
-              )}
+              {unvalidNum && <ErrorElem>Номер должен состоять из девяти символов</ErrorElem>}
             </Thumb>
           </Label>
 

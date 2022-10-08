@@ -9,14 +9,7 @@ import { selectFilter } from 'redux/selectors';
 import { toastOptions } from 'utils/toastOptions';
 import { getFilteredContacts } from 'utils/getFilteredContacts';
 
-import {
-  Phonebook,
-  Title,
-  Subtitle,
-  Wrapper,
-  List,
-  ErrorMessage,
-} from 'App.styled';
+import { Phonebook, Title, Subtitle, Wrapper, List, ErrorMessage } from 'App.styled';
 import { ContactForm } from 'components/ContactForm';
 import { Filter } from 'components/Filter';
 import { ContactList } from 'components/ContactList';
@@ -34,18 +27,13 @@ export function App() {
   const dispatch = useDispatch();
 
   const { data: contacts, isLoading } = useGetContactsQuery();
-  const [addContact, { isLoading: addContactLoading }] =
-    useAddContactMutation();
-  const [deleteContact, { isLoading: deleteContactLoading }] =
-    useDeleteContactMutation();
+  const [addContact, { isLoading: addContactLoading }] = useAddContactMutation();
+  const [deleteContact, { isLoading: deleteContactLoading }] = useDeleteContactMutation();
 
   const addNewContact = async values => {
     for (const contact of contacts) {
       if (contact.name.toLowerCase() === values.name.toLowerCase()) {
-        return toast.error(
-          `${contact.name} is already in contacts`,
-          toastOptions
-        );
+        return toast.error(`${contact.name} is already in contacts`, toastOptions);
       }
     }
     const response = await addContact(values);
@@ -74,10 +62,8 @@ export function App() {
   };
 
   const filteredContacts = getFilteredContacts(contacts, filter);
-  const isLoadingContacts =
-    isLoading || addContactLoading || deleteContactLoading;
-  const isShowingError =
-    !isLoading && filteredContacts && filteredContacts.length === 0;
+  const isLoadingContacts = isLoading || addContactLoading || deleteContactLoading;
+  const isShowingError = !isLoading && filteredContacts && filteredContacts.length === 0;
 
   return (
     <Wrapper>
@@ -88,9 +74,7 @@ export function App() {
         <Filter handleFilter={handleFilter} />
       </Phonebook>
 
-      {isShowingError && !addContactLoading && (
-        <ErrorMessage>No Contacts</ErrorMessage>
-      )}
+      {isShowingError && !addContactLoading && <ErrorMessage>No Contacts</ErrorMessage>}
 
       {isShowingError && addContactLoading && (
         <List>
@@ -102,21 +86,16 @@ export function App() {
       {!isShowingError && (
         <List>
           <Title>Contacts</Title>
-          {addContactLoading && <Spinner size={'65'} />}
-          {isLoading ? (
-            <Spinner size={'100'} />
-          ) : (
-            <>
-              {contacts && (
-                <ContactList
-                  contacts={filteredContacts}
-                  deleteContact={removeContact}
-                  deletedContactId={deletedContactId}
-                  isDeleteContactLoading={deleteContactLoading}
-                  isLoading={isLoadingContacts}
-                />
-              )}
-            </>
+          {(addContactLoading || isLoading) && <Spinner size={isLoading ? '100' : '65'} />}
+
+          {contacts && (
+            <ContactList
+              contacts={filteredContacts}
+              deleteContact={removeContact}
+              deletedContactId={deletedContactId}
+              isDeleteContactLoading={deleteContactLoading}
+              isLoading={isLoadingContacts}
+            />
           )}
         </List>
       )}
