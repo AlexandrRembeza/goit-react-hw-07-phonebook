@@ -9,7 +9,7 @@ import { selectFilter } from 'redux/selectors';
 import { toastOptions } from 'utils/toastOptions';
 import { getFilteredContacts } from 'utils/getFilteredContacts';
 
-import { Phonebook, Title, Subtitle, Wrapper, List, ErrorMessage } from 'App.styled';
+import { Phonebook, Header, Subtitle, Wrapper, List, ErrorMessage, Title } from 'App.styled';
 import { ContactForm } from 'components/ContactForm';
 import { Filter } from 'components/Filter';
 import { ContactList } from 'components/ContactList';
@@ -68,9 +68,9 @@ export function App() {
   return (
     <Wrapper>
       <Phonebook>
-        <Title>Phonebook</Title>
+        <Header>Phonebook</Header>
         <ContactForm addContact={addNewContact} isLoading={isLoadingContacts} />
-        <Subtitle>Contacts</Subtitle>
+        <Subtitle>Find Contact</Subtitle>
         <Filter handleFilter={handleFilter} />
       </Phonebook>
 

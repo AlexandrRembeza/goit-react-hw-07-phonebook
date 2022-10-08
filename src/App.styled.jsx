@@ -29,7 +29,7 @@ export const Phonebook = styled.div`
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px 0px;
 `;
 
-export const Title = styled.h1`
+export const Header = styled.h1`
   font-size: 40px;
   font-weight: 700;
   text-align: center;
@@ -39,6 +39,8 @@ export const Title = styled.h1`
   margin-top: 0;
   margin-bottom: 20px;
 `;
+
+export const Title = Header.withComponent('h2');
 
 export const Subtitle = styled.h2`
   font-size: 30px;
