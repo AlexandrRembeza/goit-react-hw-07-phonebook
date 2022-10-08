@@ -1,9 +1,3 @@
-import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { RotatingLines } from 'react-loader-spinner';
-
 import { changeFilter } from 'redux/filterSlice';
 import {
   useAddContactMutation,
@@ -22,16 +16,24 @@ import {
   Wrapper,
   List,
   ErrorMessage,
-  SpinnerWrap,
 } from 'App.styled';
 import { ContactForm } from 'components/ContactForm';
 import { Filter } from 'components/Filter';
 import { ContactList } from 'components/ContactList';
+import { Spinner } from 'components/Spinner/Spinner';
+
+import { useState } from 'react';
+import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function App() {
+  const [deletedContactId, setDeletedContactId] = useState(null);
   const filter = useSelector(selectFilter);
   const dispatch = useDispatch();
-  const { data: contacts, isFetching } = useGetContactsQuery();
+
+  const { data: contacts, isLoading } = useGetContactsQuery();
   const [addContact, { isLoading: addContactLoading }] =
     useAddContactMutation();
   const [deleteContact, { isLoading: deleteContactLoading }] =
@@ -56,13 +58,15 @@ export function App() {
   };
 
   const removeContact = async (id, contactName) => {
+    setDeletedContactId(id);
     const response = await deleteContact(id);
     if (response.error)
       return toast.error(
         `Happen mistake while deleting a contact, Please reload the page`,
         toastOptions
       );
-    return toast.success(`${contactName} deleted from contacts`, toastOptions);
+    toast.success(`${contactName} deleted from contacts`, toastOptions);
+    return setDeletedContactId(null);
   };
 
   const handleFilter = e => {
@@ -71,9 +75,9 @@ export function App() {
 
   const filteredContacts = getFilteredContacts(contacts, filter);
   const isLoadingContacts =
-    isFetching || addContactLoading || deleteContactLoading;
+    isLoading || addContactLoading || deleteContactLoading;
   const isShowingError =
-    !isFetching && filteredContacts && filteredContacts.length === 0;
+    !isLoading && filteredContacts && filteredContacts.length === 0;
 
   return (
     <Wrapper>
@@ -84,25 +88,35 @@ export function App() {
         <Filter handleFilter={handleFilter} />
       </Phonebook>
 
-      {isShowingError ? (
+      {isShowingError && !addContactLoading && (
         <ErrorMessage>No Contacts</ErrorMessage>
-      ) : (
+      )}
+
+      {isShowingError && addContactLoading && (
         <List>
-          {isLoadingContacts ? (
-            <SpinnerWrap>
-              <RotatingLines
-                strokeColor="#596dff"
-                strokeWidth="3.5"
-                animationDuration="0.80"
-                width="80"
-                visible={true}
-              />
-            </SpinnerWrap>
+          <Title>Contacts</Title>
+          <Spinner size={'65'} />
+        </List>
+      )}
+
+      {!isShowingError && (
+        <List>
+          <Title>Contacts</Title>
+          {addContactLoading && <Spinner size={'65'} />}
+          {isLoading ? (
+            <Spinner size={'100'} />
           ) : (
-            <ContactList
-              contacts={filteredContacts}
-              deleteContact={removeContact}
-            />
+            <>
+              {contacts && (
+                <ContactList
+                  contacts={filteredContacts}
+                  deleteContact={removeContact}
+                  deletedContactId={deletedContactId}
+                  isDeleteContactLoading={deleteContactLoading}
+                  isLoading={isLoadingContacts}
+                />
+              )}
+            </>
           )}
         </List>
       )}
@@ -123,4 +137,7 @@ Filter.propTypes = {
 ContactList.propTypes = {
   contacts: PropTypes.array.isRequired,
   deleteContact: PropTypes.func.isRequired,
+  deletedContactId: PropTypes.string,
+  isDeleteContactLoading: PropTypes.bool,
+  isLoading: PropTypes.bool,
 };
